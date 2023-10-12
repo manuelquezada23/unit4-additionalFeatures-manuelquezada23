@@ -1,0 +1,11 @@
+{
+  "name": "basic-hypermedia",
+  "version": "1.0.0",
+  "description": "basic hypermedia",
+  "author": "Jinoo Hong, Peter Li, Xinzhe Chai & Geireann Lindfield Roberts",
+  "license": "MIT",
+  "scripts": {
+    "dev": "echo \"Make sure you have CD'd into either the client or server folder!\"",
+    "install": "echo \"Make sure you have CD'd into either the client or server folder!\""
+  }
+}
