@@ -137,7 +137,6 @@ export const MainView = React.memo(function MainView() {
 
   const handleMoveNodeButtonClick = useCallback(() => {
     setMoveNodeModalOpen(true);
-    console.log("move");
   }, []);
 
   const handleCompleteLinkClick = useCallback(() => {
