@@ -1,41 +1,51 @@
-import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import React, { useEffect } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { FrontendAnchorGateway } from "../../../../anchors";
+import Highlight from "@tiptap/extension-highlight";
 import {
   currentNodeState,
   refreshAnchorState,
   refreshLinkListState,
   refreshState,
+  selectedAnchorsState,
   selectedExtentState,
 } from "../../../../global/Atoms";
 import { FrontendLinkGateway } from "../../../../links";
-import { FrontendNodeGateway } from "../../../../nodes";
 import {
   Extent,
-  IAnchor,
-  ILink,
-  INodeProperty,
   IServiceResponse,
   failureServiceResponse,
-  makeINodeProperty,
   successfulServiceResponse,
 } from "../../../../types";
 import "./TextContent.scss";
 import { TextMenu } from "./TextMenu";
+import { Link } from "@tiptap/extension-link";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 
 /** The content of an text node, including all its anchors */
 export const TextContent = () => {
   const currentNode = useRecoilValue(currentNodeState);
-  const [refresh, setRefresh] = useRecoilState(refreshState);
-  const [anchorRefresh, setAnchorRefresh] = useRecoilState(refreshAnchorState);
-  const [linkMenuRefresh, setLinkMenuRefresh] =
-    useRecoilState(refreshLinkListState);
+  const refresh = useRecoilValue(refreshState);
+  const anchorRefresh = useRecoilValue(refreshAnchorState);
+  const linkMenuRefresh = useRecoilValue(refreshLinkListState);
   const setSelectedExtent = useSetRecoilState(selectedExtentState);
-  const [onSave, setOnSave] = useState(false);
+  const selectedAnchors = useRecoilValue(selectedAnchorsState);
 
-  // TODO: Add all of the functionality for a rich text editor!
+  // [Lab]: Add all of the functionality for a rich text editor!
   // (This file is where the majority of your work on text editing will be done)
-  const editor = null;
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Link.configure({
+        openOnClick: true,
+        autolink: false,
+        linkOnPaste: false,
+      }),
+      Highlight,
+    ],
+    content: currentNode.content,
+  });
 
   /** This function adds anchor marks for anchors in the database to the text editor */
   const addAnchorMarks = async (): Promise<IServiceResponse<any>> => {
@@ -111,9 +121,32 @@ export const TextContent = () => {
     }
   };
 
+  // set the anchors when they are updated
+  useEffect(() => {
+    if (editor) {
+      editor.commands.setContent(editor.getHTML());
+      addAnchorMarks();
+    }
+  }, [currentNode, selectedAnchors, refresh]);
+
+  // when anchors or links are deleted via the NodeLinkMenu, we must make sure to update the content
+  useEffect(() => {
+    if (editor) {
+      const content = currentNode.content;
+      editor.commands.setContent(content);
+    }
+  }, [anchorRefresh, linkMenuRefresh]);
+
   if (!editor) {
     return <div>{currentNode.content}</div>;
   }
 
-  return <div>Editor will go here!</div>;
+  return (
+    <div className="textContent-div">
+      <TextMenu editor={editor} />
+      <div className="editorContent-div">
+        <EditorContent editor={editor} onPointerUp={onPointerUp} />
+      </div>
+    </div>
+  );
 };

@@ -22,6 +22,7 @@ import {
   alertTitleState,
   alertMessageState,
   currentNodeState,
+  refreshLinkListState,
 } from "../../../../../global/Atoms";
 
 export interface ILinkItemProps {
@@ -44,6 +45,8 @@ export const LinkItem = (props: ILinkItemProps) => {
   const [refresh, setRefresh] = useRecoilState(refreshState);
   const router = useRouter();
   const currentNode = useRecoilValue(currentNodeState);
+  const [linkMenuRefresh, setLinkMenuRefresh] =
+    useRecoilState(refreshLinkListState);
 
   const handleLinkDelete = async (link: ILink) => {
     const deleteLinkResponse = await FrontendLinkGateway.deleteLink(
@@ -84,6 +87,7 @@ export const LinkItem = (props: ILinkItemProps) => {
         }
       }
       setSelectedAnchors([]);
+      setLinkMenuRefresh(!linkMenuRefresh);
     }
   };
 
@@ -97,10 +101,7 @@ export const LinkItem = (props: ILinkItemProps) => {
     const secondAnchorResp = await FrontendAnchorGateway.getAnchor(
       link.anchor2Id
     );
-    if (
-      firstAnchorResp.success &&
-      secondAnchorResp.success
-    ) {
+    if (firstAnchorResp.success && secondAnchorResp.success) {
       const firstAnchor: IAnchor = firstAnchorResp.payload;
       const secondAnchor: IAnchor = secondAnchorResp.payload;
       anchors.push(firstAnchor);

@@ -13,6 +13,7 @@ import {
   alertTitleState,
   alertMessageState,
   currentNodeState,
+  refreshAnchorState,
 } from "../../../../global/Atoms";
 import "./AnchorItem.scss";
 
@@ -37,6 +38,7 @@ export const AnchorItem = (props: IAnchorItemProps) => {
   const setAlertIsOpen = useSetRecoilState(alertOpenState);
   const setAlertTitle = useSetRecoilState(alertTitleState);
   const setAlertMessage = useSetRecoilState(alertMessageState);
+  const [anchorRefresh, setAnchorRefresh] = useRecoilState(refreshAnchorState);
 
   const handleAnchorDelete = async (anchorId: string) => {
     const anchorLinks = anchorsMap[anchorId].links;
@@ -58,6 +60,7 @@ export const AnchorItem = (props: IAnchorItemProps) => {
       setAlertMessage(deleteAnchorResp.message);
     }
     setRefresh(!refresh);
+    setAnchorRefresh(!anchorRefresh);
   };
 
   /* Method called on link right click */

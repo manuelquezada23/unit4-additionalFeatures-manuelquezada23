@@ -96,10 +96,7 @@ export const NodeView = (props: INodeViewProps) => {
       currentNode.nodeId
     );
     let anchor2: IAnchor | undefined = undefined;
-    if (
-      anchorsByNodeResp.success &&
-      selectedExtent !== undefined
-    ) {
+    if (anchorsByNodeResp.success && selectedExtent !== undefined) {
       anchorsByNodeResp.payload?.forEach((nodeAnchor) => {
         if (isSameExtent(nodeAnchor.extent, selectedExtent)) {
           anchor2 = nodeAnchor;

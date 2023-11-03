@@ -25,6 +25,18 @@ export const currentNodeState = atom<INode>({
   key: "currentNodeState",
 });
 
+// the current node's height (only for images)
+export const currentNodeHeightState = atom<number | null>({
+  key: "currentNodeHeight",
+  default: null,
+});
+
+// the current node's width (only for images)
+export const currentNodeWidthState = atom<number | null>({
+  key: "currentNodeWidth",
+  default: null,
+});
+
 // whether a link is in progress
 export const isLinkingState = atom<boolean>({
   key: "isLinkingState",

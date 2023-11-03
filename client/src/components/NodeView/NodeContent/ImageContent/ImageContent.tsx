@@ -10,14 +10,26 @@ import {
   selectedAnchorsState,
   selectedExtentState,
   startAnchorState,
+  currentNodeHeightState,
+  currentNodeWidthState,
+  alertOpenState,
+  alertMessageState,
+  alertTitleState,
 } from "../../../../global/Atoms";
-import { IAnchor, IImageExtent } from "../../../../types";
+import {
+  IAnchor,
+  IImageExtent,
+  INodeProperty,
+  makeINodeProperty,
+} from "../../../../types";
 import "./ImageContent.scss";
+import { ImageMenu } from "./ImageMenu";
+import { FrontendNodeGateway } from "~/nodes";
 
 /** The content of an image node, including any anchors */
 export const ImageContent = () => {
   const currentNode = useRecoilValue(currentNodeState);
-  const refresh = useRecoilValue(refreshState);
+  const [refresh, setRefresh] = useRecoilState(refreshState);
   const startAnchor = useRecoilValue(startAnchorState);
   const [selectedAnchors, setSelectedAnchors] =
     useRecoilState(selectedAnchorsState);
@@ -36,6 +48,14 @@ export const ImageContent = () => {
    */
   const imageContainer = useRef<HTMLHeadingElement>(null);
   const selection = useRef<HTMLHeadingElement>(null);
+  // current height and width that is changed from the ImageMenu
+  const imageHeight = useRecoilValue(currentNodeHeightState);
+  const imageWidth = useRecoilValue(currentNodeWidthState);
+
+  // alerts
+  const setAlertIsOpen = useSetRecoilState(alertOpenState);
+  const setAlertTitle = useSetRecoilState(alertTitleState);
+  const setAlertMessage = useSetRecoilState(alertMessageState);
 
   /* State variable to keep track of anchors rendered on image */
   const [imageAnchors, setImageAnchors] = useState<JSX.Element[]>([]);
@@ -306,32 +326,69 @@ export const ImageContent = () => {
     }
   };
 
+  // helper function to update image size based on user input
+  const handleUpdateImageSize = async () => {
+    const nodePropertyWidth: INodeProperty = makeINodeProperty(
+      "modifiedWidth",
+      imageWidth
+    );
+    const nodePropertyHeight: INodeProperty = makeINodeProperty(
+      "modifiedHeight",
+      imageHeight
+    );
+    const updateResp = await FrontendNodeGateway.updateNode(
+      currentNode.nodeId,
+      [nodePropertyWidth, nodePropertyHeight]
+    );
+    if (!updateResp.success) {
+      setAlertTitle("Error updating node");
+      setAlertMessage(updateResp.message);
+      setAlertIsOpen(true);
+      return;
+    }
+    setRefresh(!refresh);
+  };
+
+  // called when image width or height are changed in the ImageMenu
+  useEffect(() => {
+    if (imageContainer.current) {
+      imageContainer.current.style.width = `${imageWidth}px`;
+      imageContainer.current.style.height = `${imageHeight}px`;
+      handleUpdateImageSize();
+    }
+  }, [imageHeight, imageWidth]);
+
   return (
-    <div className="imageWrapper">
-      <div
-        ref={imageContainer}
-        onPointerDown={onSelectionPointerDown}
-        className="imageContainer"
-      >
-        <div className="image">
-          {
-            <div className="selection" ref={selection}>
-              <div
-                onClick={onHandleClearSelectionClick}
-                onPointerDown={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-                className="selection-close"
-              >
-                <ri.RiCloseFill />
-              </div>
+    <div className="imageContent-div">
+      <ImageMenu />
+      {imageWidth && imageHeight && (
+        <div className="imageWrapper">
+          <div
+            ref={imageContainer}
+            onPointerDown={onSelectionPointerDown}
+            className="imageContainer"
+          >
+            <div className="image">
+              {
+                <div className="selection" ref={selection}>
+                  <div
+                    onClick={onHandleClearSelectionClick}
+                    onPointerDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    className="selection-close"
+                  >
+                    <ri.RiCloseFill />
+                  </div>
+                </div>
+              }
+              {imageAnchors}
+              <img src={currentNode.content} alt={currentNode.title} />
             </div>
-          }
-          {imageAnchors}
-          <img src={currentNode.content} alt={currentNode.title} />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

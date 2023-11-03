@@ -79,10 +79,7 @@ export const loadAnchorToLinksMap = async (props: LocalINodeLinkMenuProps) => {
               currLink.anchor1Id
             );
           }
-          if (
-            nodeResp.success &&
-            anchorResp.success
-          ) {
+          if (nodeResp.success && anchorResp.success) {
             linksArray.push({
               link: currLink,
               oppNode: nodeResp.payload,

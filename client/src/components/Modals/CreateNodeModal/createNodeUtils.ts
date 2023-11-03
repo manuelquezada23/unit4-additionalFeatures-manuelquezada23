@@ -88,6 +88,17 @@ export async function createNodeFromModal({
     }
   }
 
+  // setting initialHeight and initialWidth for image Nodes to access their original
+  // size. Storing these fields allows us to not call the database every single time.
+  let height = undefined;
+  let width = undefined;
+
+  if (type === "image") {
+    const meta = await getMeta(content);
+    height = meta.normalizedHeight;
+    width = meta.normalizedWidth;
+  }
+
   let newNode: INode | IFolderNode = {
     content: content,
     dateCreated: new Date(),
@@ -95,6 +106,8 @@ export async function createNodeFromModal({
     nodeId: nodeId,
     title: title,
     type: type,
+    initialHeight: height,
+    initialWidth: width,
   };
 
   switch (type) {

@@ -23,6 +23,10 @@ export interface INode {
   nodeId: string; // unique randomly generated ID which contains the type as a prefix
   title: string; // user create node title
   dateCreated?: Date; // date that the node was created
+  initialWidth?: number; // initial width of the node image
+  initialHeight?: number; // initial height of the node image
+  modifiedWidth?: number; // width of the node image when modified
+  modifiedHeight?: number; // height of the node image when modified
 }
 
 export type FolderContentType = "list" | "grid";
@@ -52,7 +56,9 @@ export function makeINode(
   children: string[] = [],
   type: NodeType = "text",
   title: string | null = null,
-  content: any = null
+  content: any = null,
+  initialWidth: number | undefined = undefined, // default width undefined
+  initialHeight: number | undefined = undefined // default height undefined
 ): INode {
   return {
     nodeId: nodeId,
@@ -60,6 +66,8 @@ export function makeINode(
     type: type,
     content: content ?? "content" + nodeId,
     filePath: makeINodePath(path, children),
+    initialWidth: initialWidth,
+    initialHeight: initialHeight,
   };
 }
 
