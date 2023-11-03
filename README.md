@@ -45,6 +45,8 @@ https://cs1951v-editablenodes.onrender.com
 
 ## Deployed Frontend URL
 
+https://cs1951v-unit3-editable-nodes.vercel.app/
+
 ## Capstone / Extra Credit
 
 N/A
