@@ -5,7 +5,7 @@ import { FrontendAnchorGateway } from "../anchors";
 /** In development mode (locally) the server is at localhost:8000*/
 const baseEndpoint = endpoint;
 
-/** This is the path to the link microservice. */
+/** This is the path to the link microservice */
 const servicePath = "link/";
 
 /**
