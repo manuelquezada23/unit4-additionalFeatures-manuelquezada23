@@ -453,4 +453,13 @@ export class BackendNodeGateway {
             newPath
         );
   }
+
+  /**
+   * Method to retrieve a list of nodes based on a search query.
+   * @param query - the query to search nodes with.
+   * @returns IServiceResponse<INode[]>
+   */
+  async searchNodesByQuery(query: string): Promise<IServiceResponse<INode[]>> {
+    return this.nodeCollectionConnection.searchNodesByQuery(query);
+  }
 }

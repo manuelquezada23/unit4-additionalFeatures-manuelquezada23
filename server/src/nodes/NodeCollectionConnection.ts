@@ -229,4 +229,37 @@ export class NodeCollectionConnection {
       "Failed to update node " + nodeId + " filePath.path"
     );
   }
+
+  /**
+   * Finds nodes when given a search query.
+   * Returns successfulServiceResponse with empty array when no nodes found.
+   *
+   * @param {string} query
+   * @return successfulServiceResponse<INode[]>
+   */
+  async searchNodesByQuery(query: string): Promise<IServiceResponse<INode[]>> {
+    const findNodes = await this.client
+      .db()
+      .collection(this.collectionName)
+      .find({
+        $or: [
+          { title: { $regex: query, $options: "i" } },
+          { content: { $regex: query, $options: "i" } },
+        ],
+      })
+      .toArray();
+
+    const foundNodes = findNodes
+      .map((node) => {
+        return {
+          ...node,
+          relevancyScore:
+            (node.title.match(new RegExp(query, "gi")) || []).length +
+            (node.content.match(new RegExp(query, "gi")) || []).length,
+        };
+      })
+      .sort((a, b) => b.relevancyScore - a.relevancyScore);
+
+    return successfulServiceResponse(foundNodes);
+  }
 }

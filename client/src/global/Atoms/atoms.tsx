@@ -102,3 +102,21 @@ export const alertMessageState = atom<string>({
   key: "alertMessageState",
   default: "",
 });
+
+// search results modal state
+export const searchResultsModalState = atom<boolean>({
+  key: "searchResultsModalState",
+  default: false,
+});
+
+// search query state
+export const searchQueryState = atom<string>({
+  key: "searchQueryState",
+  default: "",
+});
+
+// search results state
+export const searchResultsState = atom<INode[]>({
+  key: "searchResultsState",
+  default: [],
+});

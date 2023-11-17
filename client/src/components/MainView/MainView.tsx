@@ -17,6 +17,7 @@ import {
   alertMessageState,
   isAppLoadedState,
   rootNodesState,
+  searchResultsModalState,
 } from "../../global/Atoms";
 import { useRouter } from "next/router";
 import { FrontendNodeGateway } from "../../nodes";
@@ -30,6 +31,8 @@ import { NodeView } from "../NodeView";
 import { TreeView } from "../TreeView";
 import "./MainView.scss";
 import { createNodeIdsToNodesMap, makeRootWrapper } from "./mainViewUtils";
+import { GraphVizModal } from "../Modals/GraphVizModal";
+import { SearchResultsModal } from "../Modals/SearchResultsModal";
 
 export const MainView = React.memo(function MainView() {
   // app states
@@ -38,6 +41,10 @@ export const MainView = React.memo(function MainView() {
   const [createNodeModalOpen, setCreateNodeModalOpen] = useState(false);
   const [completeLinkModalOpen, setCompleteLinkModalOpen] = useState(false);
   const [moveNodeModalOpen, setMoveNodeModalOpen] = useState(false);
+  const [graphModalOpen, setGraphModalOpen] = useState(false);
+  const [searchResultsModalOpen, setSearchResultsModalOpen] = useRecoilState(
+    searchResultsModalState
+  );
 
   // node states
   const [selectedNode, setSelectedNode] = useRecoilState(selectedNodeState);
@@ -135,6 +142,14 @@ export const MainView = React.memo(function MainView() {
     [loadRootsFromDB]
   );
 
+  const handleGraphButtonClick = useCallback(() => {
+    setGraphModalOpen(true);
+  }, []);
+
+  const handleSearchButtonClick = useCallback(() => {
+    setSearchResultsModalOpen(true);
+  }, []);
+
   const handleMoveNodeButtonClick = useCallback(() => {
     setMoveNodeModalOpen(true);
   }, []);
@@ -205,6 +220,7 @@ export const MainView = React.memo(function MainView() {
             onHomeClick={handleHomeClick}
             onCreateNodeButtonClick={handleCreateNodeButtonClick}
             nodeIdsToNodesMap={nodeIdsToNodesMap}
+            handleSearchButtonClick={handleSearchButtonClick}
           />
           <CreateNodeModal
             isOpen={createNodeModalOpen}
@@ -218,6 +234,17 @@ export const MainView = React.memo(function MainView() {
             onClose={() => setCompleteLinkModalOpen(false)}
             nodeIdsToNodes={nodeIdsToNodesMap}
           />
+          <SearchResultsModal
+            isOpen={searchResultsModalOpen}
+            onClose={() => setSearchResultsModalOpen(false)}
+          />
+          {selectedNode && (
+            <GraphVizModal
+              isOpen={graphModalOpen}
+              onClose={() => setGraphModalOpen(false)}
+              node={selectedNode}
+            />
+          )}
           {selectedNode && (
             <MoveNodeModal
               isOpen={moveNodeModalOpen}
@@ -253,6 +280,7 @@ export const MainView = React.memo(function MainView() {
                 onCompleteLinkClick={handleCompleteLinkClick}
                 onCreateNodeButtonClick={handleCreateNodeButtonClick}
                 nodeIdsToNodesMap={nodeIdsToNodesMap}
+                onGraphButtonClick={handleGraphButtonClick}
               />
             </div>
           </div>

@@ -28,6 +28,7 @@ interface INodeHeaderProps {
   onHandleStartLinkClick: () => void;
   onDeleteButtonClick: (node: INode) => void;
   onMoveButtonClick: (node: INode) => void;
+  onGraphButtonClick: (node: INode) => void;
 }
 
 export const NodeHeader = (props: INodeHeaderProps) => {
@@ -36,6 +37,7 @@ export const NodeHeader = (props: INodeHeaderProps) => {
     onMoveButtonClick,
     onHandleStartLinkClick,
     onHandleCompleteLinkClick,
+    onGraphButtonClick,
   } = props;
   const currentNode = useRecoilValue(currentNodeState);
   const [refresh, setRefresh] = useRecoilState(refreshState);
@@ -198,6 +200,15 @@ export const NodeHeader = (props: INodeHeaderProps) => {
                   <option value="list">List</option>
                 </Select>
               </div>
+            )}
+            {!isFolder && (
+              <Button
+                text="Graph Visualization"
+                icon={<bi.BiLogoGraphql />}
+                onClick={() => {
+                  onGraphButtonClick(currentNode);
+                }}
+              />
             )}
           </>
         )}

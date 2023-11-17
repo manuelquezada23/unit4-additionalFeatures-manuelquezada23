@@ -4,8 +4,11 @@ import { nodeTypeIcon, pathToString } from "../../../../../global";
 import { INode } from "../../../../../types";
 import "./NodePreview.scss";
 import { NodePreviewContent } from "./NodePreviewContent";
-import { useSetRecoilState } from "recoil";
-import { selectedNodeState } from "../../../../../global/Atoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  selectedNodeState,
+  searchResultsModalState,
+} from "../../../../../global/Atoms";
 
 export interface INodePreviewProps {
   node: INode;
@@ -16,12 +19,18 @@ export const NodePreview = (props: INodePreviewProps) => {
   const { node } = props;
   const { type, title, content } = node;
   const setSelectedNode = useSetRecoilState(selectedNodeState);
+  const [searchResultsModalOpen, setSearchResultsModalOpen] = useRecoilState(
+    searchResultsModalState
+  );
   return (
     <Link href={`/${pathToString(node.filePath)}`}>
       <div
         className={"grid-nodePreview"}
         onClick={() => {
           setSelectedNode(node);
+          if (searchResultsModalOpen === true) {
+            setSearchResultsModalOpen(false);
+          }
         }}
       >
         <div className="content-preview">

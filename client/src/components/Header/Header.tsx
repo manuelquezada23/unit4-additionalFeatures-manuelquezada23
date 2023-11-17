@@ -12,15 +12,22 @@ import {
   selectedExtentState,
 } from "../../global/Atoms";
 import "./Header.scss";
+import { SearchBar } from "../SearchBar";
 
 interface IHeaderProps {
   nodeIdsToNodesMap: NodeIdsToNodesMap;
   onCreateNodeButtonClick: () => void;
   onHomeClick: () => void;
+  handleSearchButtonClick: () => void;
 }
 
 export const Header = (props: IHeaderProps) => {
-  const { onCreateNodeButtonClick, onHomeClick, nodeIdsToNodesMap } = props;
+  const {
+    onCreateNodeButtonClick,
+    onHomeClick,
+    nodeIdsToNodesMap,
+    handleSearchButtonClick,
+  } = props;
   const customButtonStyle = { height: 30, marginLeft: 10, width: 30 };
   const [isLinking, setIsLinking] = useRecoilState(isLinkingState);
   const [startAnchor, setStartAnchor] = useRecoilState(startAnchorState);
@@ -54,6 +61,7 @@ export const Header = (props: IHeaderProps) => {
           icon={<ai.AiOutlinePlus />}
           onClick={onCreateNodeButtonClick}
         />
+        <SearchBar handleSearchButtonClick={handleSearchButtonClick} />
       </div>
       {isLinking && startAnchor && (
         <div className="right-bar">

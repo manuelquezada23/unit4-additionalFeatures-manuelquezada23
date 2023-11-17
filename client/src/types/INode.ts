@@ -17,6 +17,7 @@ export type NodeType = "text" | "image" | "folder" | "pdf" | "audio" | "video";
 
 // INode with node metadata
 export interface INode {
+  [x: string]: any;
   type: NodeType; // type of node that is created
   content: any; // the content of the node
   filePath: INodePath; // unique randomly generated ID which contains the type as a prefix

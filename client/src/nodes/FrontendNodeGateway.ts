@@ -165,4 +165,27 @@ export const FrontendNodeGateway = {
       return failureServiceResponse("[updateNode] Unable to access backend");
     }
   },
+
+  search: async (query: string): Promise<IServiceResponse<INode[]>> => {
+    try {
+      return await get<IServiceResponse<INode[]>>(
+        baseEndpoint + servicePath + "search/" + query
+      );
+    } catch (exception) {
+      return failureServiceResponse("[search] Unable to access backend");
+    }
+  },
+
+  // search: async (nodeIds: string[]): Promise<IServiceResponse<INode[]>> => {
+  //   try {
+  //     return await post<IServiceResponse<INode[]>>(
+  //       baseEndpoint + servicePath + "getNodesById",
+  //       {
+  //         nodeIds: nodeIds,
+  //       }
+  //     );
+  //   } catch (exception) {
+  //     return failureServiceResponse("[getNodes] Unable to access backend");
+  //   }
+  // },
 };

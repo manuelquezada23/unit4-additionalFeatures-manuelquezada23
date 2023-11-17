@@ -35,6 +35,8 @@ export interface INodeViewProps {
   onMoveButtonClick: (node: INode) => void;
   // children used when rendering folder node
   childNodes?: INode[];
+  // handler for opening graph viz modal
+  onGraphButtonClick: (node: INode) => void;
 }
 
 /** Full page view focused on a node's content, with annotations and links */
@@ -47,6 +49,7 @@ export const NodeView = (props: INodeViewProps) => {
     onDeleteButtonClick,
     onMoveButtonClick,
     childNodes,
+    onGraphButtonClick,
   } = props;
   const setIsLinking = useSetRecoilState(isLinkingState);
   const [startAnchor, setStartAnchor] = useRecoilState(startAnchorState);
@@ -180,6 +183,7 @@ export const NodeView = (props: INodeViewProps) => {
           onDeleteButtonClick={onDeleteButtonClick}
           onHandleStartLinkClick={handleStartLinkClick}
           onHandleCompleteLinkClick={handleCompleteLinkClick}
+          onGraphButtonClick={onGraphButtonClick}
         />
         <div className="nodeView-scrollable">
           {hasBreadcrumb && (
