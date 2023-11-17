@@ -30,11 +30,11 @@ You will also see any lint errors in the console.
 
 ## Deployed Backend URL
 
-https://cs1951v-editablenodes.onrender.com
+https://cs1951v-additionalfeatures.onrender.com
 
 ## Deployed Frontend URL
 
-https://cs1951v-unit3-editable-nodes.vercel.app/
+https://cs1951v-unit4-additional-features.vercel.app/
 
 ## Capstone / Extra Credit
 
